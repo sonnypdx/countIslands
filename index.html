@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <style type="text/css">
+        body {
+            font-size: 12px;
+            font-family: Tahoma;
+        }
+
+        h2 {
+            margin-top: 5px;
+            margin-bottom: 0;
+        }
+
+        #grid {
+            border: 1px solid black;
+            border-collapse: collapse;
+            cursor: pointer;
+        }
+
+        td {
+            width: 1.2em;
+            height: 1.2em;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+
+        span {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: maroon;
+        }
+
+        td.red {
+            background-color: #f00;
+        }
+
+        td.green {
+            background-color: #0f0;
+        }
+
+        table.nav td {
+            border: 0;
+            padding: 5px 10px 5px 0;
+            white-space: nowrap;
+        }
+
+    </style>
+</head>
+<body>
+    <h2>Count Islands on a Grid</h2>
+    <p>An island is a connected set of cells that are isolated by a border or empty cells.</p>
+    <table class="nav">
+        <tr>
+            <td>Grid has </td>
+            <td>Rows: [<span id="rows"></span>], and </td>
+            <td>Columns: [<span id="cols"></span>] and </td>
+            <td>Islands: [<span id="islandsCount"></span>]</td>
+            <td><button id="btnCountIslands">Count Islands</button></td>
+            <td><button id="btnClearHighlighting">Clear Highlighting</button></td>
+            <td><button id="btnClearIslands">Clear Islands</button></td>
+            <td><button id="btnLoadTestData">Load Test Data</button></td>
+        </tr>
+    </table>
+    <div id="gridPanel">
+        <table id="grid"></table>
+    </div>
+
+    <script src="http://code.jquery.com/jquery-3.1.0.min.js" integrity="" crossorigin="anonymous"></script>
+    <script src="HtmlGrid.js"></script>
+    <script src="RecursionAlgorithm.js"></script>
+    <script src="TestDataProvider.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            // initialize to some # of rows and cols
+            var rows = 25; cols = 50;
+
+            // display the table using these #'s
+            var htmlGrid = new HtmlGrid("grid", rows, cols);
+            htmlGrid.Display();
+
+            // display these values in the UI
+            $("#rows").html(rows);
+            $("#cols").html(cols);
+            $("#islandsCount").html("0");
+
+            // user presumably creates some islands
+
+            // user clicks the count islands button
+            $("#btnCountIslands").bind("click", function () {
+                console.log("Counting Started at ..." + new Date().toLocaleTimeString());
+                var gridArray = htmlGrid.GetGridArray();
+                var counter = new RecursionAlgorithm(gridArray, "grid");
+                var c = counter.CountIslands();
+                console.log("Counting DONE at ..." + new Date().toLocaleTimeString());
+                $("#islandsCount").html(c);
+            });
+
+            // user clicks the clear highlighting button
+            $("#btnClearHighlighting").bind("click", function () {
+                htmlGrid.ClearHighlighting();
+            });
+
+            // user clicks the clear highlighting button
+            $("#btnClearIslands").bind("click", function () {
+                htmlGrid.ClearIslands();
+                $("#islandsCount").html("0");
+            });
+
+            // user clicks the load testdata button
+            $("#btnLoadTestData").bind("click", function () {
+                var testDataProv = new TestDataProvider();
+                htmlGrid.LoadTestData(testDataProv.GetTestDataSet1());
+            });
+
+        });
+    </script>
+</body>
+</html>
