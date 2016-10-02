@@ -18,6 +18,7 @@
             border: 1px solid black;
             border-collapse: collapse;
             cursor: pointer;
+            /*background-image: url('gridnums.png');*/
         }
 
         td {
@@ -31,7 +32,7 @@
 
         p {
             margin-top: 0;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
         }
 
         span {
@@ -40,90 +41,144 @@
             color: maroon;
         }
 
-        td.red {
-            background-color: #f00;
+        /* top-to-bottom and left-to-right */
+        /* TBLR => red */
+        td.TBLR {
+            font-size: 0.75em;
+            background: rgba(255, 0, 0, 0.7);
+        }
+
+        /* top-to-bottom and right-to-left */
+        /* TBRL => yellow */
+        td.TBRL {
+            font-size: 0.75em;
+            background: rgba(255, 255, 0, 0.7);
+        }
+
+        /* bottom-to-top and right-to-left */
+        /* BTRL => blue */
+        td.BTRL {
+            font-size: 0.75em;
+            background: rgba(0, 0, 255, 0.7);
+        }
+
+        /* bottom-to-top and left-to-right */
+        /* BTLR => purple */
+        td.BTLR {
+            font-size: 0.75em;
+            background: rgba(255, 0, 255, 0.7);
+        }
+
+        td.gray {
+            background-color: #aaa;
         }
 
         td.green {
             background-color: #0f0;
         }
 
-        table.nav td {
-            border: 0;
-            padding: 5px 10px 5px 0;
-            white-space: nowrap;
+        td.curr {
+            font-weight: bold;
+            color: #000;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px dotted red;
         }
 
+        table.nav td {
+            border: 0;
+            padding: 0 5px 1px 0;
+            white-space: nowrap;
+            text-align: left;
+        }
+
+        .num {
+            width: 40px;
+        }
     </style>
 </head>
 <body>
-    <h2>Count Islands on a Grid</h2>
-    <p>An island is a connected set of cells that are isolated by a border or empty cells.</p>
-    <table class="nav">
-        <tr>
-            <td>Grid has </td>
-            <td>Rows: [<span id="rows"></span>], and </td>
-            <td>Columns: [<span id="cols"></span>] and </td>
-            <td>Islands: [<span id="islandsCount"></span>]</td>
-            <td><button id="btnCountIslands">Count Islands</button></td>
-            <td><button id="btnClearHighlighting">Clear Highlighting</button></td>
-            <td><button id="btnClearIslands">Clear Islands</button></td>
-            <td><button id="btnLoadTestData">Load Test Data</button></td>
-        </tr>
-    </table>
-    <div id="gridPanel">
-        <table id="grid"></table>
+    <div>
+        <h2>Count Islands on a Grid</h2>
+        <p>An island is a connected set of cells that are isolated/separated by a border or empty cells.</p>
+        <table class="nav">
+            <tr>
+                <td>
+                    Select Test Dataset #:
+                    <select id="dataChoiceDD"></select>
+                    <button id="btnLoadTestData">Load Test Data</button>
+                </td>
+            </tr>
+            <!--<tr>
+                <td>
+                    OR Start with an Empty Grid of Rows <input class="num" type="number" min="3" max="75" maxlength="2" size="2" id="altRows" />
+                    and Columns <input type="number" class="num" min="3" max="75" size="2" maxlength="2" id="altCols" />
+                    <button id="btnDrawEmptyGrid">Draw Empty Grid</button>
+                </td>
+            </tr>-->
+        </table>
+        <table class="nav">
+            <tr>
+                <td>
+                    Select Algorithm: <select id="algChoiceDD">
+                        <option value="1" >Recursion</option>
+                        <option value="2" selected>Iterative</option>
+                    </select>
+                    <button id="btnCountIslands">Count Islands</button>
+                </td>
+                <td><button id="btnClearHighlighting">Clear Highlighting</button></td>
+                <td><button id="btnShowGridData" title="Export Current Grid Data as JSON">Export Grid Data</button></td>
+            </tr>
+        </table>
+        <table class="nav">
+            <tr>
+                <td>Test Data Information:</td>
+                <td>Rows: [<span id="rows"></span>] | </td>
+                <td>Columns: [<span id="cols"></span>] | </td>
+                <td>Expected # of Islands: [<span id="expICount"> </span>] | </td>
+                <td>Calculated # of Islands: [<span id="calcICount"></span>] |</td>
+            </tr>
+        </table>
+        <div id="gridPanel">
+            <table id="grid"></table>
+        </div>
     </div>
 
-    <script src="http://code.jquery.com/jquery-3.1.0.min.js" integrity="" crossorigin="anonymous"></script>
-    <script src="HtmlGrid.js"></script>
-    <script src="RecursionAlgorithm.js"></script>
-    <script src="TestDataProvider.js"></script>
+    <script src="./Scripts/jQuery/jquery-3.1.0.min.js"></script>
+    <script src="./Scripts/TestDataProvider.js"></script>
+    <script src="./Scripts/HtmlNavBar.js"></script>
+    <script src="./Scripts/GridArrayClass.js"></script>
+    <script src="./Scripts/HtmlGrid.js"></script>
+    <script src="./Scripts/RecursionAlgorithm.js"></script>
+    <script src="./Scripts/IterativeAlgorithm.js"></script>
 
     <script>
         $(document).ready(function () {
+            // instantiate the inputs needed for navbar
+            var dataProv = new TestDataProvider();
+            var elemIds = {
+                TestDataDropDown: "dataChoiceDD",
+                AlgorithmDropDown: "algChoiceDD",
+                LoadTestDataButton: "btnLoadTestData",
+                DrawEmptyGridButton: "btnDrawEmptyGrid",
+                CustomRowsInputTextbox: "altRows",
+                CustomColsInputTextbox: "altCols",
+                CountIslandsButton: "btnCountIslands",
+                ClearHilightButton: "btnClearHighlighting",
+                ExportGridButton: "btnShowGridData",
+                GridPanel: "gridPanel",
+                GridTable: "grid",
+                RowsLabel: "rows",
+                ColsLabel: "cols",
+                ExpectedCountLabel: "expICount",
+                CalculatedCountLabel: "calcICount",
+            };
 
-            // initialize to some # of rows and cols
-            var rows = 25; cols = 50;
+            // instantiate the navbar
+            var navBar = new HtmlNavBar(dataProv, elemIds);
 
-            // display the table using these #'s
-            var htmlGrid = new HtmlGrid("grid", rows, cols);
-            htmlGrid.Display();
-
-            // display these values in the UI
-            $("#rows").html(rows);
-            $("#cols").html(cols);
-            $("#islandsCount").html("0");
-
-            // user presumably creates some islands
-
-            // user clicks the count islands button
-            $("#btnCountIslands").bind("click", function () {
-                console.log("Counting Started at ..." + new Date().toLocaleTimeString());
-                var gridArray = htmlGrid.GetGridArray();
-                var counter = new RecursionAlgorithm(gridArray, "grid");
-                var c = counter.CountIslands();
-                console.log("Counting DONE at ..." + new Date().toLocaleTimeString());
-                $("#islandsCount").html(c);
-            });
-
-            // user clicks the clear highlighting button
-            $("#btnClearHighlighting").bind("click", function () {
-                htmlGrid.ClearHighlighting();
-            });
-
-            // user clicks the clear highlighting button
-            $("#btnClearIslands").bind("click", function () {
-                htmlGrid.ClearIslands();
-                $("#islandsCount").html("0");
-            });
-
-            // user clicks the load testdata button
-            $("#btnLoadTestData").bind("click", function () {
-                var testDataProv = new TestDataProvider();
-                htmlGrid.LoadTestData(testDataProv.GetTestDataSet1());
-            });
-
+            // for demo purposes
+            $(elemIds.TestDataDropDown).val("testData75x50a");
+            $(elemIds.LoadTestDataButton).click();
         });
     </script>
 </body>
