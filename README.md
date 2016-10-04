@@ -11,11 +11,9 @@ It currently uses a recursive algorithm to find islands on a grid.
 * Click on Clear Highlighting button to clear the highlighting but keep the islands on the grid.
 * You can also click on any cell to toggle its state.
 
-*Sample Output from Iterative Algorithm:*  
-[[https://github.com/sonnypdx/countIslands/blob/master/images/countIslands_Iterative.png|alt='Iterative']]
-  
-*Sample Output from Recursive Algorithm:*  
-[[https://github.com/sonnypdx/countIslands/blob/master/images/countIslands_Recursion.png|alt='Recursion']]
+![Sample Output from Iterative Algorithm](https://github.com/sonnypdx/countIslands/blob/master/images/countIslands_Iterative.png) 
+
+![Sample Output from Recursive Algorithm](https://github.com/sonnypdx/countIslands/blob/master/images/countIslands_Recursion.png)
 
 **Future Improvements**
 Some future improvements that I can think of.
