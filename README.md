@@ -17,7 +17,7 @@ An island is a connected set of cells that are isolated/separated by a border or
 ![Sample Output from Recursive Algorithm](https://github.com/sonnypdx/countIslands/blob/master/images/countIslands_Recursion.png)
 
 **Future Improvements** 
-Some future improvements that I can think of. 
+*Some future improvements that I can think of.*
 * Try it on few very large data sets to compare both algorithms.
 * Try to improve the efficiency of Iterative algorithm.
 * Convert the project to ReactJS optionally use NodeJS in the backend.
