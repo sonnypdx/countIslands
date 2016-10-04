@@ -35,7 +35,7 @@
         return "[<br/>" + result + "<br/>]";
     };
 
-    this.Clone = function () {
+    this.CopyGridArray = function () {
         var newGridArray = [];
 
         // just traverse through the grid and copy the state

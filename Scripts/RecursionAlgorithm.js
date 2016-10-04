@@ -6,7 +6,7 @@ function RecursionAlgorithm(gridArrayClass, htmlGrid) {
 
     // initialization
     {
-        gridArray = gridArrayClass.Clone();
+        gridArray = gridArrayClass.CopyGridArray();
         rows = gridArrayClass.Rows();
         cols = gridArrayClass.Cols();
     }

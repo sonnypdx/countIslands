@@ -6,19 +6,22 @@ function IterativeAlgorithm(gridArrayClass, htmlGrid) {
 
     // initialization
     {
-        gridArray = gridArrayClass.Clone();
+        gridArray = gridArrayClass.CopyGridArray();
         rows = gridArrayClass.Rows();
         cols = gridArrayClass.Cols();
         trackerGrid = getTrackerGrid();
     }
 
+    // get trackerGrid by counting each cell that has bit on
+    // as an island by itself
+    // we will collapse them as we traverse in each direction
     function getTrackerGrid() {
         var trackerGrid = [];
-
+        var counter = 0;
         for (var i = 0; i < rows; i++) {
             trackerGrid[i] = [];
             for (var j = 0; j < cols; j++) {
-                trackerGrid[i][j] = 0;
+                trackerGrid[i][j] = gridArray[i][j]? ++counter : 0;
             }
         }
 
@@ -215,39 +218,22 @@ function IterativeAlgorithm(gridArrayClass, htmlGrid) {
 
     // public facing methods
     this.CountIslands = function () {
-        var count = 0;
-
         // TBLR
         // traverse from top-to-bottom and from left-to-right
-        // this will mark two sections of islands with different no.
-        // depending upon the layout of the island
-        for (var i = 0; i < rows; i++) {
-            for (var j = 0; j < cols; j++) {
-                //htmlGrid.HighlightCellByCssClass(i, j, "curr");
-
-                //Stop here for debugging
-                if (i === 37 && j === 5) {
-                    console.log("debug");
-                }
-
-                // cell is true
-                if (gridArray[i][j]) {
-                    // if this is a brand new island (i.e. we have not identified it yet)
-                    // then getMaxIslandNoAround will return 0
-                    // we will increment the island count and update the tracker grid
-                    var num = getMaxIslandNoAround(i, j);
-                    if (num === 0) { num = ++count; }
-                    trackerGrid[i][j] = num;
-
-                    // visually highlight this grid
-                    // show the island # on the HtmlGrid for visual feedback
-                    htmlGrid.HighlightCell(i, j, trackerGrid[i][j], "TBLR");
-                };
-            }
-        }
-
-        // if after initial iteration, we do not have any islands simply return
-        if (!count) return count;
+        // to fix the multiple ids of adjacent islands
+        var collapsedTBLR = 0;
+        // row loop: i = 0; i < rows; i++
+        // col loop: j = 0; j < cols; j++
+        var args = {
+            rowStart: 0,
+            rowEnd: rows,
+            colStart: 0,
+            colEnd: cols,
+            rowStep: 1,
+            colStep: 1,
+            dirName: "TBLR",
+        };
+        collapsedTBLR = collapseIslandsByDirection(args);
 
         // TBRL
         // traverse from top-to-bottom and from right-to-left
@@ -299,24 +285,6 @@ function IterativeAlgorithm(gridArrayClass, htmlGrid) {
             dirName: "BTLR",
         };
         collapsedBTLR = collapseIslandsByDirection(args);
-
-        // had to add this to catch one edge case in the test dataset - testData75x50a
-        // TBLR
-        // traverse from top-to-bottom and from left-to-right
-        // to fix the multiple ids of adjacent islands
-        var collapsedTBLR = 0;
-        // row loop: i = 0; i < rows; i++
-        // col loop: j = 0; j < cols; j++
-        var args = {
-            rowStart: 0,
-            rowEnd: rows,
-            colStart: 0,
-            colEnd: cols,
-            rowStep: 1,
-            colStep: 1,
-            dirName: "TBLR",
-        };
-        collapsedTBLR = collapseIslandsByDirection(args);
 
         return countIslandsFromTrackerGrid();
     };
